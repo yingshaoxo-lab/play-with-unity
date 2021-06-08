@@ -32,7 +32,7 @@ public class MovingACube : MonoBehaviour
             int index = Random.Range(0, cube_list.Length - 1);
             var cube = cube_list[index];
 
-            cube.transform.Translate(Vector3.right * Time.deltaTime * turnSpeed * horizontalInput);
+            cube.transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput);
         }
     }
 }
