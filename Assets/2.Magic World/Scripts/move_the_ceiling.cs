@@ -14,6 +14,7 @@ public class move_the_ceiling : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.Space)) {
             int status = anim.GetInteger("status_num");
             //Debug.Log(status);
@@ -25,5 +26,6 @@ public class move_the_ceiling : MonoBehaviour
                 anim.Play("right wall moving");
             }
         }
+        */
     }
 }
