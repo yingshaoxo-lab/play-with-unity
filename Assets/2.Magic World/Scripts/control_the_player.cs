@@ -9,36 +9,74 @@ public class control_the_player : MonoBehaviour
     public Vector3 movementDirection = Vector3.zero;
     Animator animator;
     // Start is called before the first frame update
+    public int running_multiplier = 5;
+    public GameObject[] cameraList;
+
+    public float smooth = 1f;
+    private Quaternion targetRotation;
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>(); 
+        animator = GetComponent<Animator>();
+        targetRotation = transform.rotation;
     }
 
     // Update is called once per frame
     void Update()
     {
-        var vertical_input =  Input.GetAxisRaw("Vertical");
+        bool is_shift_in_pressing = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+
+        var vertical_input = Input.GetAxisRaw("Vertical");
         var horizontal_input = Input.GetAxisRaw("Horizontal");
 
-        if (vertical_input > 0 || horizontal_input > 0) {
-            animator.Play("walking");
-        } else {
+        if (Mathf.Abs(vertical_input) > 0 || Mathf.Abs(horizontal_input) > 0)
+        {
+            if (is_shift_in_pressing)
+            {
+                cameraList[0].gameObject.SetActive(true);
+                cameraList[1].gameObject.SetActive(false);
+                animator.Play("running");
+            }
+            else
+            {
+                cameraList[0].gameObject.SetActive(false);
+                cameraList[1].gameObject.SetActive(true);
+                animator.Play("walking");
+            }
+        }
+        else
+        {
+            cameraList[0].gameObject.SetActive(false);
+            cameraList[1].gameObject.SetActive(true);
             animator.Play("standing");
+        }
+
+        int multiplier = 1;
+        if (is_shift_in_pressing)
+        {
+            multiplier = running_multiplier;
         }
 
         // code that handles the forward moving
         Vector3 inputMovement = transform.forward * movementSpeed * vertical_input;
-        characterController.Move(inputMovement * Time.deltaTime);
+        characterController.Move(inputMovement * Time.deltaTime * multiplier);
 
         // code that handles the rotation
-        transform.Rotate(Vector3.up * horizontal_input * rotationSpeed);
+        if (is_shift_in_pressing)
+        {
+            transform.Rotate(Vector3.up * horizontal_input * rotationSpeed * (multiplier / 2));
+        }
+        else
+        {
+            transform.Rotate(Vector3.up * horizontal_input * rotationSpeed);
+        }
 
         // code that handles the jump
-        if (Input.GetKeyDown(KeyCode.Space)) {// && characterController.isGrounded) {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {// && characterController.isGrounded) {
             movementDirection.y = jumpSpeed;
         }
         movementDirection.y -= gravity * Time.deltaTime;
-        characterController.Move(movementDirection* Time.deltaTime);
+        characterController.Move(movementDirection * Time.deltaTime * multiplier);
     }
 }
