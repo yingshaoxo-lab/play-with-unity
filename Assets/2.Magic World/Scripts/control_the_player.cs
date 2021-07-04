@@ -6,19 +6,16 @@ public class control_the_player : MonoBehaviour
 {
     private CharacterController characterController;
     public float movementSpeed, rotationSpeed, jumpSpeed, gravity;
+    public float runningSpeed, runningRotationSpeed;
     public Vector3 movementDirection = Vector3.zero;
     Animator animator;
-    // Start is called before the first frame update
-    public int running_multiplier = 5;
     public GameObject[] cameraList;
 
-    public float smooth = 1f;
-    private Quaternion targetRotation;
+    public GameObject magicPortal;
     void Start()
     {
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        targetRotation = transform.rotation;
     }
 
     // Update is called once per frame
@@ -29,7 +26,7 @@ public class control_the_player : MonoBehaviour
         var vertical_input = Input.GetAxisRaw("Vertical");
         var horizontal_input = Input.GetAxisRaw("Horizontal");
 
-        if (Mathf.Abs(vertical_input) > 0 || Mathf.Abs(horizontal_input) > 0)
+        if (Mathf.Abs(vertical_input) > 0)
         {
             if (is_shift_in_pressing)
             {
@@ -51,20 +48,22 @@ public class control_the_player : MonoBehaviour
             animator.Play("standing");
         }
 
-        int multiplier = 1;
+        // code that handles the forward moving
         if (is_shift_in_pressing)
         {
-            multiplier = running_multiplier;
+            Vector3 inputMovement = transform.forward * runningSpeed * vertical_input;
+            characterController.Move(inputMovement * Time.deltaTime);
         }
-
-        // code that handles the forward moving
-        Vector3 inputMovement = transform.forward * movementSpeed * vertical_input;
-        characterController.Move(inputMovement * Time.deltaTime * multiplier);
+        else
+        {
+            Vector3 inputMovement = transform.forward * movementSpeed * vertical_input;
+            characterController.Move(inputMovement * Time.deltaTime);
+        }
 
         // code that handles the rotation
         if (is_shift_in_pressing)
         {
-            transform.Rotate(Vector3.up * horizontal_input * rotationSpeed * (multiplier / 2));
+            transform.Rotate(Vector3.up * horizontal_input * runningRotationSpeed);
         }
         else
         {
@@ -76,7 +75,14 @@ public class control_the_player : MonoBehaviour
         {// && characterController.isGrounded) {
             movementDirection.y = jumpSpeed;
         }
+
         movementDirection.y -= gravity * Time.deltaTime;
-        characterController.Move(movementDirection * Time.deltaTime * multiplier);
+        characterController.Move(movementDirection * Time.deltaTime);
+
+        //attack
+        if (Input.GetMouseButtonDown(0))
+        {
+            Instantiate(magicPortal, transform.position + new Vector3(0,1,0), transform.rotation);
+        }
     }
 }
