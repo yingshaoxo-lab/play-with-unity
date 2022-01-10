@@ -6,6 +6,7 @@ public class CubeMatrix : MonoBehaviour
 {
     public GameObject cube;
     public Camera camera;
+    public GameObject plane;
     int[][] matrix = new int[][]
     {
         new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -19,12 +20,16 @@ public class CubeMatrix : MonoBehaviour
         new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1 },
     };
 
-    float distance_between_cubes = 5;
-
     // Start is called before the first frame update
     void Start()
     {
-        //Debug.Log("yingshaoxo");
+        float planeWidth = plane.GetComponent<Renderer>().bounds.size.x;
+        float cubeWidth = cube.GetComponent<Renderer>().bounds.size.x;
+
+        int cubeNumberForARow = matrix[0].Length;
+
+        float distance_between_cubes = planeWidth / cubeNumberForARow;
+
         for (int y = 0; y < matrix.Length; y++)
         {
             for (int x = 0; x < matrix[0].Length; x++)
@@ -45,7 +50,6 @@ public class CubeMatrix : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-
             RaycastHit hit;
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 
@@ -61,4 +65,5 @@ public class CubeMatrix : MonoBehaviour
             }
         }
     }
+
 }
