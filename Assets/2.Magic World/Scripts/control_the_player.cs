@@ -82,7 +82,7 @@ public class control_the_player : MonoBehaviour
         //attack
         if (Input.GetMouseButtonDown(0))
         {
-            Instantiate(magicPortal, transform.position + new Vector3(0,1,0), transform.rotation);
+            Instantiate(magicPortal, transform.position + new Vector3(0, 1, 0), transform.rotation);
         }
     }
 }
