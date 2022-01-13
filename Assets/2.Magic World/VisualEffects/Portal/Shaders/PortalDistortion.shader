@@ -81,7 +81,8 @@ Shader "Unlit/PortalDistortion"
                 grabPos = saturate(grabPos / _ScreenParams.xy);
 
                 //float4 bgcolor = SAMPLE_TEXTURE2D(_ColorPyramidTexture, sampler_ColorPyramidTexture, _ColorPyramidScale.xy * grabPos);
-				float4 bgcolor = SAMPLE_TEXTURE2D_X(_ColorPyramidTexture, s_trilinear_clamp_sampler, grabPos * _ColorPyramidScale.xy);
+				//float4 bgcolor = SAMPLE_TEXTURE2D_X(_ColorPyramidTexture, s_trilinear_clamp_sampler, grabPos * _ColorPyramidScale.xy);
+				float4 bgcolor = SAMPLE_TEXTURE2D_X(_ColorPyramidTexture, s_trilinear_clamp_sampler, grabPos);
                 return float4(bgcolor.rgb,1);
             }
             ENDHLSL
